@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using System.IO;
+using System.Threading;
 
 namespace licensing_demo
 {
@@ -49,7 +50,9 @@ namespace licensing_demo
 
         private bool ReadLicense(string path)
         {
-            bool exists = File.Exists(path);
+            Console.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
+            string licensePath = path + "license.txt";
+            bool exists = File.Exists(licensePath);
             if (!exists)
             {
                 Console.WriteLine(String.Format("License file not found on path: {0}", path));
@@ -133,8 +136,17 @@ namespace licensing_demo
             return true;
         }
 
+        public DateTime GetDateTFromRegistry()
+        {
+            Microsoft.Win32.RegistryKey key;
+            key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("License Date");
+
+            key.SetValue("Date", dt.ToString());
+            key.Close();
+        }
+
         //https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-create-a-key-in-the-registry
-        public void SaveDate(DateTime dt)
+        public void SaveDateToRegistry(DateTime dt)
         {
             Microsoft.Win32.RegistryKey key;
             key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("License Date");
@@ -146,8 +158,10 @@ namespace licensing_demo
         {
             KeyHandler keyHandler = new KeyHandler("", false);
             DateTime now = DateTime.Now;
+            //Waiting to get later time
+            Thread.Sleep(2000);
 
-            //is present?
+            //Check if the given conditions are satisfied
             bool ok = ReadLicense(path) && CheckLicense(keyHandler) && CheckDate(now);
 
             if (ok)

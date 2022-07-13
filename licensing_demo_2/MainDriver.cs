@@ -47,50 +47,52 @@ namespace licensing_demo
 
         static void Main(string[] args)
         {
-            //TODO move to plugin when ready
+ 
             Console.WriteLine("Start!");
-            //current directory?
-            Console.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
-            //motherboeard id?
+            //Print current directory path
+            Console.WriteLine("The current directory is: " + System.AppDomain.CurrentDomain.BaseDirectory);
+            //Print motherboard ID
             Console.WriteLine(getMotherBoardID());
-            //date?
             DateTime now = DateTime.Now;
+            //Print current DateTime
             Console.WriteLine(now);
-            //1.pont
-            KeyHandler rsaHelper = new KeyHandler("");
+            
+            KeyHandler keyHandler = new KeyHandler("");
 
-            Console.WriteLine(">>>>>>>>>>>>>>>>>");
-            Console.WriteLine(rsaHelper.GetPriKeyStr());
-            Console.WriteLine(">>>>>>>>>>>>>>>>>");
-            Console.WriteLine(rsaHelper.GetPubKeyStr());
-            Console.WriteLine(">>>>>>>>>>>>>>>>>");
+            Console.WriteLine("Private key: "+ keyHandler.GetPriKeyStr());
+            Console.WriteLine("Public key: "+ keyHandler.GetPubKeyStr());
 
-            rsaHelper.WritePubKeyToFile();
-            rsaHelper.WritePriKeyToFile();
+
+            keyHandler.WritePubKeyToFile();
+            keyHandler.WritePriKeyToFile();
 
             LicenseHandler newLicense = new LicenseHandler();
 
+            Console.WriteLine("License string representation:");
             Console.WriteLine(newLicense);
 
-            string id = newLicense.getID();
-
-            string signature = rsaHelper.SignData(id);
-
+            //Signing id and date to prevent manipulation with date in the file.
+            string idAndDate = newLicense.getIdAndDate();
+            string signature = keyHandler.SignData(idAndDate);
             newLicense.addSign(signature);
-
+            //Save the license to a file
             newLicense.WriteLicenseToFile();
-            Console.WriteLine(">>>>>>>>>>>>>>>>>");
 
+            /*
+             * Using an other key handler (only with public key) and a 
+             * new license class to make sure the verification of the 
+             * signature works as intended.
+             */
             LicenseHandler newLicense2 = LicenseHandler.ReadLicenseFromFile();
 
-            string idRead = newLicense2.getID();
+            string idDateRead = newLicense2.getIdAndDate();
             string signRead = newLicense2.getSignature();
 
-            KeyHandler rsaHelper2 = new KeyHandler("", false);
+            KeyHandler keyHandlerPublic = new KeyHandler("", false);
 
-            bool verificationResult = rsaHelper2.VerifyData(idRead, signRead);
-            Console.WriteLine(String.Format("Verification success: {0}", verificationResult));
-            //aHelper.
+            bool verificationResult = keyHandlerPublic.VerifyData(idDateRead, signRead);
+            Console.WriteLine(String.Format(">>> Verification success: {0} <<<", verificationResult));
+
 
 
             Controller ct = new Controller();

@@ -93,9 +93,19 @@ namespace licensing_demo
             return this.creationDate;
         }
 
+        public string getCreationTimeString()
+        {
+            return this.creationDate.ToString();
+        }
+
         public string getID()
         {
             return this.boardID;
+        }
+
+        public string getIdAndDate()
+        {
+            return getCreationTimeString() + getID();
         }
 
         public string getSignature()
