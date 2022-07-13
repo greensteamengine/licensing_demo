@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
+//using System.Management;
 using System.Threading.Tasks;
 
 
@@ -11,6 +11,7 @@ namespace application_licensing
 {
     internal class Plugin_A : IPlugin
     {
+        /*
         private static String getMotherBoardID()
         {
             String serial = "";
@@ -30,11 +31,12 @@ namespace application_licensing
                 return serial;
             }
         }
+        */
         private void CreateLicense()
         {
             Console.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
             //motherboeard id?
-            Console.WriteLine(getMotherBoardID());
+            //Console.WriteLine(getMotherBoardID());
             //date?
             DateTime now = DateTime.Now;
             Console.WriteLine(now);

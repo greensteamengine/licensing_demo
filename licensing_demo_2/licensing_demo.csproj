@@ -44,11 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="License.cs" />
-    <Compile Include="LicenseBase.cs" />
-    <Compile Include="RSAFileHelper.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="LicenseHandler.cs" />
+    <Compile Include="KeyHandler.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="MainStub.cs" />
+    <Compile Include="MainDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

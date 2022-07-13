@@ -10,7 +10,7 @@ using licensing_demo;
 
 namespace licensing_demo
 {
-    class MainStub
+    class MainDriver
     {
         private static Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
 
@@ -57,14 +57,46 @@ namespace licensing_demo
             DateTime now = DateTime.Now;
             Console.WriteLine(now);
             //1.pont
-            RSAFileHelper rsaHelper = new RSAFileHelper();
+            KeyHandler rsaHelper = new KeyHandler("");
 
-            //Console.WriteLine(">>>>>>>>>>>>>>>>>");
-            //Console.WriteLine(rsaHelper.GetPriKeyStr());
-            //Console.WriteLine(rsaHelper.GetPubKeyStr());
-            rsaHelper.WriteKeysToFiles();
+            Console.WriteLine(">>>>>>>>>>>>>>>>>");
+            Console.WriteLine(rsaHelper.GetPriKeyStr());
+            Console.WriteLine(">>>>>>>>>>>>>>>>>");
+            Console.WriteLine(rsaHelper.GetPubKeyStr());
+            Console.WriteLine(">>>>>>>>>>>>>>>>>");
+
+            rsaHelper.WritePubKeyToFile();
+            rsaHelper.WritePriKeyToFile();
+
+            LicenseHandler newLicense = new LicenseHandler();
+
+            Console.WriteLine(newLicense);
+
+            string id = newLicense.getID();
+
+            string signature = rsaHelper.SignData(id);
+
+            newLicense.addSign(signature);
+
+            newLicense.WriteLicenseToFile();
+            Console.WriteLine(">>>>>>>>>>>>>>>>>");
+
+            LicenseHandler newLicense2 = LicenseHandler.ReadLicenseFromFile();
+
+            string idRead = newLicense2.getID();
+            string signRead = newLicense2.getSignature();
+
+            KeyHandler rsaHelper2 = new KeyHandler("", false);
+
+            bool verificationResult = rsaHelper2.VerifyData(idRead, signRead);
+            Console.WriteLine(String.Format("Verification success: {0}", verificationResult));
             //aHelper.
-            
+
+
+            Controller ct = new Controller();
+            Console.WriteLine("Control check:");
+            Console.WriteLine(ct.Controll(""));
+
         }
     }
 
