@@ -43,7 +43,7 @@ namespace licensing_demo
         {
             File.WriteAllText(filePath, content);
         }
-        
+
 
         static void Main(string[] args)
         {

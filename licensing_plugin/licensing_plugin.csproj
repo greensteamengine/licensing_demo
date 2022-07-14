@@ -54,7 +54,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\licensing_demo_2\licensing_demo.csproj">
+    <ProjectReference Include="..\licensing_demo\licensing_demo.csproj">
       <Project>{aba8e532-4821-4156-9fe5-d4b72668762b}</Project>
       <Name>licensing_demo</Name>
     </ProjectReference>

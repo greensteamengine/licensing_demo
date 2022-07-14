@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "licensing_demo", "licensing_demo_2\licensing_demo.csproj", "{ABA8E532-4821-4156-9FE5-D4B72668762B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "licensing_plugin", "licensing_plugin\licensing_plugin.csproj", "{C447EE44-ECCE-478D-911E-3CCDF10DF549}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "licensing_demo", "licensing_demo\licensing_demo.csproj", "{ABA8E532-4821-4156-9FE5-D4B72668762B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C447EE44-ECCE-478D-911E-3CCDF10DF549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C447EE44-ECCE-478D-911E-3CCDF10DF549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C447EE44-ECCE-478D-911E-3CCDF10DF549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C447EE44-ECCE-478D-911E-3CCDF10DF549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABA8E532-4821-4156-9FE5-D4B72668762B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
