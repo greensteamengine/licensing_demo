@@ -50,17 +50,18 @@ namespace licensing_demo
 
         private bool ReadLicense(string path)
         {
-            Console.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
+            Console.WriteLine("Read from: " + System.AppDomain.CurrentDomain.BaseDirectory);
             string licensePath = path + "license.txt";
             bool exists = File.Exists(licensePath);
             if (!exists)
             {
                 Console.WriteLine(String.Format("License file not found on path: {0}", path));
+                return false;
             }
 
             try
             {
-                string licenseString = File.ReadAllText(path);
+                string licenseString = File.ReadAllText(licensePath);
                 LicenseHandler lh = new LicenseHandler(licenseString);
                 if (!lh.hasSignature())
                 {
@@ -69,11 +70,12 @@ namespace licensing_demo
                 }
 
                 this.licenseHandler = lh;
+                Console.WriteLine("License file read!");
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error reading license file!");
+                Console.WriteLine("Error reading license file! Exception: " + e);
                 return false;
             }
 
@@ -84,9 +86,9 @@ namespace licensing_demo
         
         private bool CheckLicense(KeyHandler keyHandler)
         {
-            string pcID = getMotherBoardID();
+            string idAndDate = this.licenseHandler.getIdAndDate();
             string signature = this.licenseHandler.getSignature();
-            bool verificationResult = keyHandler.VerifyData(pcID, signature);
+            bool verificationResult = keyHandler.VerifyData(idAndDate, signature);
             if (verificationResult)
             {
                 Console.WriteLine("Signature verification successful!");
@@ -101,48 +103,70 @@ namespace licensing_demo
         private bool CheckDate(DateTime dt)
         {
 
-            string dateString = dt.ToString();
+            DateTime? prevTime = GetDateFromRegistry();
+            DateTime prevLaunch;
 
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("License Date");
-            Object prevDate = key.GetValue("Date");
-            if (prevDate != null)
+            int timeComparsion = -1;
+            DateTime now = DateTime.Now;
+            if (prevTime.HasValue)
             {
-                dateString = (string)prevDate;// new Version(o as String);  //"as" because it's REG_SZ...otherwise ToString() might be safe(r)
-                //do what you like with version
+                prevLaunch = prevTime.Value;
+                
+                timeComparsion = DateTime.Compare(prevLaunch, dt);
+                if (timeComparsion >= 0)
+                {
+                    Console.WriteLine("Wrong date time in license!");
+                    return false;
+                }
+            }
+            else
+            {
+                
+                Console.WriteLine("Time of previous lunch not in the register, First launch!");
+            }
+
+            //>0 − If date1 is later than date2
+            //https://www.tutorialspoint.com/datetime-compare-method-in-chash
+            
+            
+
+            //Check if current lounch time is larger than the license time!
+            timeComparsion = DateTime.Compare(dt, now);
+            if (timeComparsion >= 0)
+            {
+                Console.WriteLine("Error! License date time larger than system date time!");
+                return false;
+            }
+
+            //License expiration ?
+            //Add new date or this comparsion is enough?
+            return true;
+        }
+
+        public DateTime? GetDateFromRegistry()
+        {
+            string dateString = "";
+
+            //var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("License Date");
+
+
+            
+            Object regDateObj = key.GetValue("Date");
+            if (regDateObj != null)
+            {
+                dateString = (string)regDateObj;// new Version(o as String);  //"as" because it's REG_SZ...otherwise ToString() might be safe(r)
+                                                //do what you like with version
             }
             else
             {
                 Console.WriteLine("No date in registry, getting sytem time!");
+                return null;
             }
 
-            
 
-            DateTime prevTime = DateTime.Parse(dateString);
-
-            DateTime now = DateTime.Now;
-
-            int timeComparsion = DateTime.Compare(prevTime, now);
-
-            //>0 − If date1 is later than date2
-            //https://www.tutorialspoint.com/datetime-compare-method-in-chash
-            if (timeComparsion >= 0)
-            {
-                Console.WriteLine("Wrong date time in license!");
-                return false;
-            }
-            //License expiration ?
-            //Add new date or this comparsion is enough?
-
-            return true;
-        }
-
-        public DateTime GetDateTFromRegistry()
-        {
-            Microsoft.Win32.RegistryKey key;
-            key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("License Date");
-
-            key.SetValue("Date", dt.ToString());
-            key.Close();
+            DateTime regDate = DateTime.Parse(dateString);
+            return regDate;
         }
 
         //https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-create-a-key-in-the-registry
@@ -158,6 +182,9 @@ namespace licensing_demo
         {
             KeyHandler keyHandler = new KeyHandler("", false);
             DateTime now = DateTime.Now;
+
+            //Uncomment the date saving if you want to 
+            SaveDateToRegistry(now);
             //Waiting to get later time
             Thread.Sleep(2000);
 
@@ -167,13 +194,13 @@ namespace licensing_demo
             if (ok)
             {
                 Console.WriteLine("License ok, ready to run!");
-                SaveDate(now);
+                SaveDateToRegistry(now);
                 return true;
             }
             else
             {
                 LicenseHandler newLicense = new LicenseHandler();
-                newLicense.WriteLicenseToFile();
+                newLicense.WriteLicenseToFile("user_license\\");
                 Console.WriteLine("License fail! Please send the newly generated license file for verification!");
                 return false;
             }
