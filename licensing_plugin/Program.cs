@@ -9,6 +9,7 @@ using System.Management;
 namespace licensing_plugin
 
 {
+    //Prototype for a possible plugin stub to implement the needed functionality.
     internal class Plugin_A : IPlugin
     {
         private static String getMotherBoardID()

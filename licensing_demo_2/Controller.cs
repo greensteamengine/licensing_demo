@@ -9,6 +9,11 @@ using System.Threading;
 
 namespace licensing_demo
 {
+    /*
+     * This class implements the needed functionailty in the plugin.
+     * Some files (license, open key) are used here and in the driver too, since
+     * in the real scenario they will have to be sent manually (or in an automatized way) between the user and the license provider.
+     */
     internal class Controller
     {
         private LicenseHandler licenseHandler;
